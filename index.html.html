@@ -1,0 +1,1490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Aabeda Patel — Data Analytics Portfolio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800;900&family=Fira+Code:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+/* ═══════════════════════════════════════════
+   TOKENS — BLACK + ELECTRIC PURPLE
+═══════════════════════════════════════════ */
+:root {
+  --bg:       #030308;
+  --bg1:      #07070F;
+  --bg2:      #0D0D1A;
+  --bg3:      #111124;
+  --bg4:      #16162E;
+  --p1:       #8B5CF6;   /* violet */
+  --p2:       #A78BFA;   /* lavender */
+  --p3:       #C4B5FD;   /* light violet */
+  --p4:       #7C3AED;   /* deep violet */
+  --p5:       #6D28D9;   /* darkest violet */
+  --pink:     #EC4899;   /* hot pink accent */
+  --cyan:     #22D3EE;   /* cyan pop */
+  --glow:     rgba(139,92,246,0.35);
+  --glow2:    rgba(139,92,246,0.12);
+  --glow3:    rgba(139,92,246,0.06);
+  --text0:    #F0EEFF;
+  --text1:    #B8B0D4;
+  --text2:    #9D97BC;
+  --text3:    #7A7296;
+  --border:   rgba(139,92,246,0.15);
+  --border2:  rgba(139,92,246,0.3);
+  --sans:     'Outfit', sans-serif;
+  --body:     'Space Grotesk', sans-serif;
+  --mono:     'Fira Code', monospace;
+  --ease:     cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ═══ RESET ═══ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg);
+  color: var(--text0);
+  font-family: var(--body);
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+img { display: block; max-width: 100%; }
+a { color: inherit; text-decoration: none; }
+
+/* ═══ CUSTOM CURSOR ═══ */
+.cursor { position: fixed; z-index: 9999; pointer-events: none; }
+.cursor-ring {
+  width: 36px; height: 36px;
+  border: 1.5px solid var(--p1);
+  border-radius: 50%;
+  position: fixed;
+  transform: translate(-50%,-50%);
+  transition: transform 0.15s var(--ease), width 0.3s, height 0.3s, border-color 0.3s;
+  mix-blend-mode: screen;
+}
+.cursor-dot2 {
+  width: 5px; height: 5px;
+  background: var(--p2);
+  border-radius: 50%;
+  position: fixed;
+  transform: translate(-50%,-50%);
+  transition: transform 0.05s;
+  box-shadow: 0 0 10px var(--p1);
+}
+
+/* ═══ PARTICLE CANVAS ═══ */
+#particleCanvas {
+  position: fixed; inset: 0; z-index: 0;
+  pointer-events: none; opacity: 0.5;
+}
+
+/* ═══ UTILS ═══ */
+.container { max-width: 1240px; margin: 0 auto; padding: 0 48px; position: relative; z-index: 2; }
+.label {
+  font-family: var(--mono);
+  font-size: 10px; letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--p2);
+  display: flex; align-items: center; gap: 10px;
+}
+.label::before { content: '//'; color: var(--p4); }
+
+/* Glow line */
+.gline { width: 100%; height: 1px; background: linear-gradient(90deg, transparent, var(--p1), transparent); margin: 0; opacity: 0.4; }
+
+/* 3D card base */
+.card3d {
+  transform-style: preserve-3d;
+  transition: transform 0.4s var(--ease);
+}
+
+/* Reveal */
+.reveal {
+  opacity: 0; transform: translateY(36px);
+  transition: opacity 0.9s var(--ease), transform 0.9s var(--ease);
+}
+.reveal.in { opacity: 1; transform: translateY(0); }
+
+/* Neon text */
+.neon {
+  color: var(--p2);
+  text-shadow: 0 0 20px var(--p1), 0 0 60px rgba(139,92,246,0.4);
+}
+
+/* ═══ NAV ═══ */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 400;
+  background: rgba(3,3,8,0.85);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+}
+.nav-wrap {
+  display: flex; align-items: center; justify-content: space-between;
+  height: 66px; max-width: 1240px; margin: 0 auto; padding: 0 48px;
+}
+.nav-logo {
+  font-family: var(--sans); font-size: 1.1rem; font-weight: 700;
+  letter-spacing: 0.05em;
+  background: linear-gradient(135deg, var(--p3), var(--pink));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+}
+.nav-links { display: flex; align-items: center; gap: 32px; list-style: none; }
+.nav-links a {
+  font-family: var(--mono); font-size: 9.5px; letter-spacing: 0.18em;
+  text-transform: uppercase; color: var(--text2);
+  transition: color 0.2s;
+  position: relative;
+}
+.nav-links a::after {
+  content: ''; position: absolute; bottom: -4px; left: 0;
+  width: 0; height: 1px; background: var(--p1);
+  transition: width 0.3s var(--ease);
+}
+.nav-links a:hover { color: var(--p3); }
+.nav-links a:hover::after { width: 100%; }
+.nav-cta {
+  background: linear-gradient(135deg, var(--p4), var(--p5)) !important;
+  color: white !important;
+  padding: 8px 22px !important;
+  border-radius: 4px !important;
+  box-shadow: 0 0 20px rgba(139,92,246,0.4) !important;
+  transition: box-shadow 0.3s !important;
+  font-weight: 500 !important;
+}
+.nav-cta:hover { box-shadow: 0 0 35px rgba(139,92,246,0.7) !important; }
+.nav-cta::after { display: none !important; }
+.hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; }
+.hamburger span { width: 22px; height: 1.5px; background: var(--text0); display: block; }
+.mobile-menu { display: none; }
+.mobile-menu.open {
+  display: flex; flex-direction: column;
+  position: fixed; top: 66px; left: 0; right: 0;
+  background: var(--bg1); border-bottom: 1px solid var(--border);
+  padding: 16px 24px; z-index: 399;
+}
+.mobile-menu.open a {
+  font-family: var(--mono); font-size: 11px; letter-spacing: 0.14em;
+  text-transform: uppercase; color: var(--text2);
+  padding: 14px 0; border-bottom: 1px solid var(--border); display: block;
+}
+
+/* ═══ HERO ═══ */
+#hero {
+  min-height: 100vh; display: flex; align-items: center;
+  padding-top: 66px; position: relative; overflow: hidden;
+  background: var(--bg);
+}
+
+/* Large glowing orbs */
+#hero::before {
+  content: '';
+  position: absolute; top: 10%; left: -15%;
+  width: 700px; height: 700px;
+  background: radial-gradient(circle, rgba(109,40,217,0.18) 0%, transparent 65%);
+  pointer-events: none;
+}
+#hero::after {
+  content: '';
+  position: absolute; bottom: 5%; right: -10%;
+  width: 500px; height: 500px;
+  background: radial-gradient(circle, rgba(236,72,153,0.1) 0%, transparent 65%);
+  pointer-events: none;
+}
+
+/* Grid overlay */
+.hero-grid-overlay {
+  position: absolute; inset: 0;
+  background-image:
+    linear-gradient(rgba(139,92,246,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(139,92,246,0.04) 1px, transparent 1px);
+  background-size: 60px 60px;
+  pointer-events: none;
+}
+
+.hero-inner {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 60px; align-items: center;
+  padding: 90px 0; position: relative; z-index: 2;
+}
+
+/* Floating 3D badge */
+.hero-badge {
+  display: inline-flex; align-items: center; gap: 10px;
+  background: rgba(139,92,246,0.08);
+  border: 1px solid var(--border2);
+  border-radius: 100px; padding: 7px 18px;
+  margin-bottom: 28px;
+  animation: float 4s ease-in-out infinite;
+}
+@keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-6px)} }
+.badge-pulse {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: var(--p1);
+  box-shadow: 0 0 12px var(--p1);
+  animation: pulse 2s ease-in-out infinite;
+}
+@keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(0.8)} }
+.hero-badge span {
+  font-family: var(--mono); font-size: 9px; letter-spacing: 0.2em;
+  text-transform: uppercase; color: var(--p3);
+}
+
+.hero-name {
+  font-family: var(--sans);
+  font-size: clamp(3.8rem, 7vw, 6.5rem);
+  font-weight: 800; line-height: 0.95;
+  letter-spacing: -0.03em;
+  color: var(--text0);
+  margin-bottom: 8px;
+}
+.hero-name .grad {
+  background: linear-gradient(135deg, var(--p2) 0%, var(--pink) 50%, var(--p3) 100%);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text;
+  display: block;
+  filter: drop-shadow(0 0 30px rgba(139,92,246,0.5));
+}
+
+.hero-role {
+  font-size: 1rem; font-weight: 400; color: var(--text2);
+  letter-spacing: 0.08em; text-transform: uppercase;
+  font-family: var(--mono);
+  margin: 22px 0 26px;
+  display: flex; align-items: center; gap: 12px;
+}
+.hero-role::before { content: ''; display: block; width: 32px; height: 1px; background: var(--p4); }
+
+.hero-desc {
+  font-size: 0.95rem; color: var(--text1); line-height: 1.8;
+  max-width: 500px; margin-bottom: 40px;
+}
+
+.hero-actions { display: flex; gap: 14px; flex-wrap: wrap; align-items: center; }
+
+.btn-purple {
+  display: inline-flex; align-items: center; gap: 10px;
+  background: linear-gradient(135deg, var(--p1), var(--p5));
+  color: white; padding: 14px 30px;
+  font-family: var(--mono); font-size: 9px;
+  letter-spacing: 0.18em; text-transform: uppercase;
+  border: none; border-radius: 4px; cursor: pointer;
+  font-weight: 500;
+  box-shadow: 0 0 30px rgba(139,92,246,0.5), 0 4px 20px rgba(0,0,0,0.4);
+  transition: box-shadow 0.3s, transform 0.2s;
+  position: relative; overflow: hidden;
+}
+.btn-purple::before {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.1), transparent);
+  opacity: 0; transition: opacity 0.3s;
+}
+.btn-purple:hover { box-shadow: 0 0 50px rgba(139,92,246,0.8), 0 4px 30px rgba(0,0,0,0.5); transform: translateY(-2px); }
+.btn-purple:hover::before { opacity: 1; }
+
+.btn-outline-p {
+  display: inline-flex; align-items: center; gap: 10px;
+  background: transparent; color: var(--p3);
+  padding: 13px 30px;
+  font-family: var(--mono); font-size: 9px;
+  letter-spacing: 0.18em; text-transform: uppercase;
+  border: 1px solid var(--border2); border-radius: 4px; cursor: pointer;
+  transition: background 0.3s, border-color 0.3s, box-shadow 0.3s, transform 0.2s;
+}
+.btn-outline-p:hover {
+  background: var(--glow3); border-color: var(--p1);
+  box-shadow: 0 0 20px rgba(139,92,246,0.25);
+  transform: translateY(-2px);
+}
+
+.btn-resume {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: transparent; color: var(--text2);
+  padding: 13px 22px;
+  font-family: var(--mono); font-size: 9px;
+  letter-spacing: 0.18em; text-transform: uppercase;
+  border: 1px solid var(--border); border-radius: 4px; cursor: pointer;
+  transition: color 0.3s, border-color 0.3s;
+}
+.btn-resume:hover { color: var(--cyan); border-color: rgba(34,211,238,0.4); }
+
+/* Stats */
+.hero-stats {
+  display: grid; grid-template-columns: repeat(4,1fr);
+  gap: 2px; margin-top: 52px;
+  background: var(--border); border: 1px solid var(--border);
+}
+.hstat {
+  background: var(--bg1); padding: 18px 20px;
+  position: relative; overflow: hidden;
+  transition: background 0.3s;
+}
+.hstat::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  background: linear-gradient(90deg, var(--p1), var(--pink));
+  opacity: 0; transition: opacity 0.3s;
+}
+.hstat:hover { background: var(--bg3); }
+.hstat:hover::before { opacity: 1; }
+.hstat-num {
+  font-family: var(--sans); font-size: 2.2rem; font-weight: 800;
+  background: linear-gradient(135deg, var(--p2), var(--p3));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  line-height: 1;
+}
+.hstat-lbl {
+  font-family: var(--mono); font-size: 8px;
+  letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--text1); margin-top: 5px;
+}
+
+/* Hero right — 3D rotating visual panel */
+.hero-right { display: flex; flex-direction: column; gap: 12px; perspective: 1000px; }
+.hcard3d {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 8px; padding: 16px 20px;
+  display: flex; align-items: center; gap: 14px;
+  transform: perspective(1000px) rotateY(-8deg) rotateX(2deg);
+  transition: transform 0.5s var(--ease), box-shadow 0.3s, border-color 0.3s;
+  transform-style: preserve-3d;
+  position: relative;
+}
+.hcard3d::before {
+  content: '';
+  position: absolute; inset: 0; border-radius: 8px;
+  background: linear-gradient(135deg, rgba(139,92,246,0.05), transparent);
+  pointer-events: none;
+}
+.hcard3d:hover {
+  transform: perspective(1000px) rotateY(0deg) rotateX(0deg) translateZ(10px);
+  box-shadow: 0 20px 60px rgba(139,92,246,0.25), 0 0 0 1px rgba(139,92,246,0.3);
+  border-color: var(--border2);
+}
+.hcard3d-icon { font-size: 20px; flex-shrink: 0; }
+.hcard3d-title { font-size: 0.82rem; font-weight: 600; color: var(--text0); margin-bottom: 2px; }
+.hcard3d-sub { font-family: var(--mono); font-size: 9px; color: var(--text3); }
+
+/* ═══ SECTIONS SHARED ═══ */
+section { padding: 110px 0; position: relative; }
+.sec-head { margin-bottom: 70px; }
+.sec-head h2 {
+  font-family: var(--sans);
+  font-size: clamp(2.6rem, 5vw, 4rem);
+  font-weight: 800; line-height: 1.05;
+  color: var(--text0); margin-top: 14px;
+  letter-spacing: -0.03em;
+}
+.sec-head h2 em {
+  font-style: normal;
+  background: linear-gradient(135deg, var(--p2), var(--pink));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+}
+.sec-head p { margin-top: 14px; font-size: 0.9rem; color: var(--text2); max-width: 540px; line-height: 1.75; }
+
+/* ═══ ABOUT ═══ */
+#about { background: var(--bg1); }
+#about::before {
+  content: '';
+  position: absolute; top: 0; right: 0;
+  width: 500px; height: 500px;
+  background: radial-gradient(circle, rgba(109,40,217,0.08) 0%, transparent 65%);
+  pointer-events: none;
+}
+.about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: start; }
+.about-text p {
+  font-size: 0.93rem; color: var(--text1); line-height: 1.9; margin-bottom: 20px;
+}
+.about-text strong { color: var(--p3); font-weight: 600; }
+
+/* Seeking box */
+.seeking-box {
+  margin-top: 28px;
+  background: linear-gradient(135deg, rgba(139,92,246,0.08), rgba(236,72,153,0.05));
+  border: 1px solid var(--border2);
+  border-radius: 8px; padding: 20px 24px;
+  position: relative; overflow: hidden;
+}
+.seeking-box::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  background: linear-gradient(90deg, var(--p1), var(--pink));
+}
+.seeking-title {
+  font-family: var(--mono); font-size: 9px; letter-spacing: 0.2em;
+  text-transform: uppercase; color: var(--p2); margin-bottom: 12px;
+}
+.seeking-item {
+  display: flex; align-items: center; gap: 10px;
+  font-size: 0.85rem; color: var(--text1); padding: 5px 0;
+}
+.seeking-item::before { content: '▶'; color: var(--p1); font-size: 8px; }
+
+/* Info table */
+.info-table { border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+.info-row {
+  display: grid; grid-template-columns: 110px 1fr;
+  padding: 16px 20px; border-bottom: 1px solid var(--border);
+  transition: background 0.2s;
+}
+.info-row:last-child { border-bottom: none; }
+.info-row:hover { background: var(--bg3); }
+.info-lbl {
+  font-family: var(--mono); font-size: 8px;
+  letter-spacing: 0.2em; text-transform: uppercase; color: var(--text2); padding-top: 2px;
+}
+.info-val { font-size: 0.85rem; color: var(--text0); line-height: 1.6; }
+.info-val a { color: var(--p3); }
+.sdot {
+  width: 7px; height: 7px; background: #22D97A; border-radius: 50%;
+  display: inline-block; margin-right: 7px;
+  box-shadow: 0 0 8px rgba(34,217,122,0.6);
+  animation: sdpulse 2s ease-in-out infinite;
+}
+@keyframes sdpulse { 0%,100%{box-shadow:0 0 8px rgba(34,217,122,0.6)} 50%{box-shadow:0 0 16px rgba(34,217,122,0.9)} }
+
+/* ═══ SKILLS ═══ */
+#skills { background: var(--bg); }
+#skills::before {
+  content: '';
+  position: absolute; bottom: 0; left: 50%;
+  transform: translateX(-50%);
+  width: 80%; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--p1), transparent);
+  opacity: 0.3;
+}
+.skills-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; }
+.skill-card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 10px; padding: 28px 24px;
+  transition: transform 0.4s var(--ease), box-shadow 0.4s, border-color 0.3s;
+  transform: perspective(800px) rotateX(0deg);
+  position: relative; overflow: hidden;
+}
+.skill-card::after {
+  content: '';
+  position: absolute; inset: 0; border-radius: 10px;
+  background: linear-gradient(135deg, rgba(139,92,246,0.06), transparent);
+  opacity: 0; transition: opacity 0.3s;
+}
+.skill-card:hover {
+  transform: perspective(800px) rotateX(-3deg) translateY(-8px);
+  box-shadow: 0 30px 60px rgba(139,92,246,0.2), 0 0 0 1px rgba(139,92,246,0.25);
+  border-color: var(--border2);
+}
+.skill-card:hover::after { opacity: 1; }
+.sk-icon { font-size: 28px; margin-bottom: 16px; }
+.sk-name { font-family: var(--sans); font-size: 0.92rem; font-weight: 700; color: var(--text0); margin-bottom: 8px; }
+.sk-desc { font-size: 0.8rem; color: var(--text2); line-height: 1.65; margin-bottom: 16px; }
+
+/* ═══ FEATURED PROJECTS ═══ */
+#featured { background: var(--bg1); }
+.featured-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 20px; }
+
+/* Large featured card — spans 2 cols */
+.feat-card-wide {
+  grid-column: 1 / -1;
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 12px; overflow: hidden;
+  display: grid; grid-template-columns: 1.1fr 0.9fr;
+  min-height: 420px;
+  transition: box-shadow 0.4s, border-color 0.3s;
+  position: relative;
+}
+.feat-card-wide:hover {
+  box-shadow: 0 0 60px rgba(139,92,246,0.2);
+  border-color: var(--border2);
+}
+
+.feat-card {
+  background: var(--bg2); border: 1px solid var(--border);
+  border-radius: 12px; overflow: hidden;
+  display: flex; flex-direction: column;
+  transition: box-shadow 0.4s, border-color 0.3s, transform 0.4s;
+  position: relative;
+}
+.feat-card:hover {
+  box-shadow: 0 20px 60px rgba(139,92,246,0.18);
+  border-color: var(--border2);
+  transform: translateY(-4px);
+}
+
+/* Top accent bar */
+.feat-card::before, .feat-card-wide::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  background: linear-gradient(90deg, var(--p1), var(--pink), var(--p1));
+  background-size: 200% 100%;
+  animation: shimmer 3s linear infinite;
+  z-index: 5;
+}
+@keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
+
+/* ── CAROUSEL ── */
+.carousel-wrap {
+  position: relative; overflow: hidden;
+  background: var(--bg); flex-shrink: 0;
+}
+.feat-card-wide .carousel-wrap { height: 100%; min-height: 380px; border-right: 1px solid var(--border); }
+.feat-card .carousel-wrap { aspect-ratio: 16/10; }
+
+.carousel-track { display: flex; height: 100%; transition: transform 0.55s var(--ease); }
+.carousel-slide {
+  min-width: 100%; height: 100%;
+  background: var(--bg);
+  display: flex; align-items: center; justify-content: center;
+  position: relative; overflow: hidden;
+}
+.carousel-slide img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+.c-placeholder {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: 10px;
+  pointer-events: none;
+}
+.c-placeholder .ph-icon { font-size: 40px; opacity: 0.12; }
+.c-placeholder p {
+  font-family: var(--mono); font-size: 9px;
+  letter-spacing: 0.14em; text-transform: uppercase; color: var(--text3);
+}
+
+.cbtn {
+  position: absolute; top: 50%; transform: translateY(-50%);
+  background: rgba(7,7,15,0.85); border: 1px solid var(--border2);
+  width: 36px; height: 36px; border-radius: 4px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; z-index: 10;
+  font-size: 18px; color: var(--p3);
+  transition: background 0.2s, box-shadow 0.2s;
+  opacity: 0; pointer-events: none;
+}
+.carousel-wrap:hover .cbtn { opacity: 1; pointer-events: all; }
+.cbtn:hover { background: var(--p4); box-shadow: 0 0 20px rgba(139,92,246,0.5); }
+.cbtn.prev { left: 10px; }
+.cbtn.next { right: 10px; }
+
+.cdots {
+  position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%);
+  display: flex; gap: 6px; z-index: 10;
+}
+.cdot {
+  width: 5px; height: 5px; border-radius: 50%;
+  background: rgba(139,92,246,0.3); cursor: pointer;
+  transition: background 0.2s, transform 0.2s;
+}
+.cdot.active { background: var(--p1); transform: scale(1.5); box-shadow: 0 0 8px var(--p1); }
+
+.img-badge {
+  position: absolute; top: 10px; left: 10px; z-index: 10;
+  background: rgba(7,7,15,0.8); color: var(--p3);
+  font-family: var(--mono); font-size: 9px; letter-spacing: 0.1em;
+  padding: 4px 10px; border-radius: 3px;
+  border: 1px solid rgba(139,92,246,0.25);
+}
+.add-img-btn {
+  position: absolute; bottom: 10px; right: 10px; z-index: 20;
+  background: linear-gradient(135deg, var(--p1), var(--p5));
+  color: white; border: none; border-radius: 4px;
+  width: 32px; height: 32px; font-size: 20px; font-weight: 300;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; font-family: var(--mono);
+  transition: box-shadow 0.2s, transform 0.2s;
+  opacity: 0; pointer-events: none;
+  box-shadow: 0 0 20px rgba(139,92,246,0.5);
+}
+.carousel-wrap:hover .add-img-btn { opacity: 1; pointer-events: all; }
+.add-img-btn:hover { transform: scale(1.1); box-shadow: 0 0 35px rgba(139,92,246,0.8); }
+.rm-btn {
+  position: absolute; top: 8px; right: 8px; z-index: 15;
+  background: rgba(7,7,15,0.85); color: var(--text2);
+  border: 1px solid var(--border); width: 22px; height: 22px;
+  border-radius: 3px; font-size: 10px; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0; transition: opacity 0.2s, background 0.2s;
+}
+.carousel-slide:hover .rm-btn { opacity: 1; }
+.rm-btn:hover { background: #7F1D1D; color: white; }
+.file-input-hidden { display: none; }
+
+/* ── PROJECT BODY with TABS ── */
+.proj-body { padding: 28px 28px 28px; flex: 1; display: flex; flex-direction: column; }
+.feat-card-wide .proj-body { padding: 36px; }
+
+.proj-num {
+  font-family: var(--mono); font-size: 8.5px; letter-spacing: 0.25em;
+  text-transform: uppercase; color: var(--p2); margin-bottom: 10px;
+}
+.proj-title {
+  font-family: var(--sans); font-size: 1.35rem; font-weight: 700;
+  color: var(--text0); line-height: 1.2; margin-bottom: 14px; letter-spacing: -0.02em;
+}
+.feat-card-wide .proj-title { font-size: 1.6rem; }
+
+/* Tab nav */
+.tab-nav {
+  display: flex; gap: 2px;
+  background: var(--bg); border-radius: 6px; padding: 3px;
+  margin-bottom: 16px; flex-wrap: wrap;
+  border: 1px solid var(--border);
+}
+.tab-btn {
+  font-family: var(--mono); font-size: 8px; letter-spacing: 0.14em;
+  text-transform: uppercase; color: var(--text2);
+  padding: 6px 12px; border-radius: 4px; cursor: pointer;
+  border: none; background: transparent;
+  transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+  white-space: nowrap;
+}
+.tab-btn.active {
+  background: linear-gradient(135deg, var(--p1), var(--p5));
+  color: white;
+  box-shadow: 0 0 14px rgba(139,92,246,0.4);
+}
+.tab-btn:hover:not(.active) { color: var(--p3); background: var(--bg3); }
+
+/* Tab panels */
+.tab-panel { display: none; font-size: 0.82rem; color: var(--text2); line-height: 1.75; flex: 1; }
+.tab-panel.active { display: block; animation: fadeInTab 0.3s var(--ease); }
+@keyframes fadeInTab { from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:translateY(0)} }
+.tab-panel ul { list-style: none; padding: 0; }
+.tab-panel ul li {
+  display: flex; align-items: flex-start; gap: 8px;
+  padding: 5px 0; border-bottom: 1px solid rgba(139,92,246,0.06);
+  font-size: 0.8rem; color: var(--text1);
+}
+.tab-panel ul li::before { content: '▸'; color: var(--p1); flex-shrink: 0; font-size: 9px; margin-top: 3px; }
+.tab-panel .method-tag {
+  display: inline-flex; align-items: center;
+  background: rgba(139,92,246,0.1); border: 1px solid var(--border);
+  border-radius: 4px; padding: 4px 10px;
+  font-family: var(--mono); font-size: 8px; letter-spacing: 0.1em;
+  text-transform: uppercase; color: var(--p3); margin: 3px 2px;
+}
+.tab-panel .tools-row {
+  display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px;
+}
+
+/* Tags */
+.ptags { display: flex; flex-wrap: wrap; gap: 6px; margin: 14px 0 10px; }
+.ptag {
+  font-family: var(--mono); font-size: 7.5px; letter-spacing: 0.1em;
+  text-transform: uppercase; padding: 4px 10px;
+  border: 1px solid var(--border); border-radius: 100px;
+  color: var(--text3); background: transparent;
+  transition: border-color 0.2s, color 0.2s;
+}
+.ptag:hover { border-color: var(--p1); color: var(--p3); }
+.ptag.tool { background: rgba(139,92,246,0.07); color: var(--text2); border-color: rgba(139,92,246,0.2); }
+
+/* Metrics */
+.pmetrics {
+  display: flex; gap: 20px; flex-wrap: wrap;
+  padding-top: 16px; border-top: 1px solid var(--border); margin-top: auto;
+}
+.mval {
+  font-family: var(--sans); font-size: 1.5rem; font-weight: 800;
+  background: linear-gradient(135deg, var(--p2), var(--pink));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  line-height: 1;
+}
+.mlbl {
+  font-family: var(--mono); font-size: 7px;
+  letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--text2); margin-top: 4px;
+}
+
+/* ═══ ALL PROJECTS ═══ */
+#projects { background: var(--bg); }
+.proj-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 16px; }
+
+/* ═══ EXPERIENCE ═══ */
+#experience { background: var(--bg1); }
+.exp-layout { display: grid; grid-template-columns: 280px 1fr; gap: 80px; }
+.exp-sidebar p { font-size: 0.88rem; color: var(--text2); line-height: 1.8; margin-top: 14px; }
+.exp-list { display: flex; flex-direction: column; }
+.exp-item {
+  display: grid; grid-template-columns: 110px 1fr;
+  gap: 28px; padding: 32px 0;
+  border-bottom: 1px solid var(--border); align-items: start;
+}
+.exp-item:first-child { border-top: 1px solid var(--border); }
+.edate {
+  font-family: var(--mono); font-size: 8px; letter-spacing: 0.16em;
+  color: var(--text2); text-transform: uppercase; line-height: 1.7; padding-top: 3px;
+}
+.ecompany {
+  font-family: var(--mono); font-size: 8px; letter-spacing: 0.2em;
+  text-transform: uppercase; color: var(--p2); margin-bottom: 6px;
+}
+.erole {
+  font-family: var(--sans); font-size: 1.05rem; font-weight: 600;
+  color: var(--text0); margin-bottom: 10px;
+}
+.edesc { font-size: 0.83rem; color: var(--text2); line-height: 1.8; }
+
+/* ═══ CERTIFICATIONS ═══ */
+#certifications { background: var(--bg); }
+.cert-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 12px; }
+.cert-card {
+  background: var(--bg2); border: 1px solid var(--border);
+  border-radius: 10px; padding: 26px 22px;
+  transition: transform 0.4s var(--ease), box-shadow 0.4s, border-color 0.3s;
+  position: relative; overflow: hidden;
+}
+.cert-card::before {
+  content: '';
+  position: absolute; bottom: 0; left: 0; right: 0; height: 2px;
+  background: linear-gradient(90deg, var(--p1), var(--pink));
+  transform: scaleX(0); transform-origin: left;
+  transition: transform 0.4s var(--ease);
+}
+.cert-card:hover {
+  transform: translateY(-6px) perspective(500px) rotateX(-2deg);
+  box-shadow: 0 20px 50px rgba(139,92,246,0.2);
+  border-color: var(--border2);
+}
+.cert-card:hover::before { transform: scaleX(1); }
+.cicon { font-size: 24px; margin-bottom: 14px; }
+.cissuer { font-family: var(--mono); font-size: 8px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--p2); margin-bottom: 8px; }
+.cname { font-size: 0.86rem; font-weight: 600; color: var(--text0); line-height: 1.45; }
+
+/* ═══ CONTACT ═══ */
+#contact { background: var(--bg1); position: relative; overflow: hidden; }
+#contact::before {
+  content: '';
+  position: absolute; top: 50%; left: 50%;
+  transform: translate(-50%,-50%);
+  width: 800px; height: 800px;
+  background: radial-gradient(circle, rgba(109,40,217,0.08) 0%, transparent 65%);
+  pointer-events: none;
+}
+.contact-wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: start; position: relative; z-index: 1; }
+.contact-left h2 {
+  font-family: var(--sans); font-size: clamp(2.8rem, 5vw, 4.5rem);
+  font-weight: 800; line-height: 1; margin-top: 14px;
+  letter-spacing: -0.03em; color: var(--text0);
+}
+.contact-left h2 em {
+  font-style: normal;
+  background: linear-gradient(135deg, var(--p2), var(--pink));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  display: block;
+}
+.contact-left p { margin-top: 20px; font-size: 0.9rem; color: var(--text2); line-height: 1.8; max-width: 360px; }
+.contact-email {
+  display: block; margin-top: 36px;
+  font-family: var(--sans); font-size: 1.3rem; font-weight: 600;
+  color: var(--text0); letter-spacing: -0.01em;
+  border-bottom: 1px solid var(--border2); padding-bottom: 16px;
+  transition: color 0.3s;
+  position: relative;
+}
+.contact-email::after {
+  content: ''; position: absolute; bottom: -1px; left: 0;
+  height: 1px; width: 0; background: var(--p1);
+  transition: width 0.4s var(--ease);
+  box-shadow: 0 0 10px var(--p1);
+}
+.contact-email:hover { color: var(--p3); }
+.contact-email:hover::after { width: 100%; }
+
+.clinks { display: flex; flex-direction: column; gap: 8px; margin-top: 0; }
+.clink {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 18px 22px; background: var(--bg2);
+  border: 1px solid var(--border); border-radius: 8px;
+  transition: background 0.2s, border-color 0.2s, box-shadow 0.2s;
+  cursor: pointer;
+}
+.clink:hover {
+  background: var(--bg3); border-color: var(--border2);
+  box-shadow: 0 0 20px rgba(139,92,246,0.12);
+}
+.clink-lbl { font-family: var(--mono); font-size: 8px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--text2); }
+.clink-val { font-size: 0.87rem; color: var(--text0); margin-top: 4px; }
+.clink-arrow { color: var(--text2); font-size: 18px; transition: transform 0.2s, color 0.2s; }
+.clink:hover .clink-arrow { transform: translateX(5px); color: var(--p2); }
+
+footer {
+  background: var(--bg);
+  border-top: 1px solid var(--border);
+  padding: 22px 48px;
+  display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;
+}
+.fl, .fr { font-family: var(--mono); font-size: 8px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--text3); }
+.fr span { color: var(--p2); }
+
+/* ═══ RESPONSIVE ═══ */
+@media (max-width: 1024px) {
+  .featured-grid, .proj-grid { grid-template-columns: 1fr; }
+  .feat-card-wide { grid-template-columns: 1fr; }
+  .feat-card-wide .carousel-wrap { min-height: 260px; border-right: none; border-bottom: 1px solid var(--border); }
+}
+@media (max-width: 960px) {
+  .container { padding: 0 24px; }
+  .nav-wrap { padding: 0 24px; }
+  .hero-inner { grid-template-columns: 1fr; gap: 52px; }
+  .hero-right { display: none; }
+  .hero-stats { grid-template-columns: repeat(2,1fr); }
+  .about-grid { grid-template-columns: 1fr; gap: 52px; }
+  .skills-grid { grid-template-columns: repeat(2,1fr); }
+  .exp-layout { grid-template-columns: 1fr; gap: 36px; }
+  .exp-item { grid-template-columns: 1fr; gap: 6px; }
+  .cert-grid { grid-template-columns: repeat(2,1fr); }
+  .contact-wrap { grid-template-columns: 1fr; gap: 52px; }
+  .nav-links { display: none; }
+  .hamburger { display: flex; }
+  footer { padding: 18px 24px; }
+}
+@media (max-width: 640px) {
+  .skills-grid { grid-template-columns: 1fr; }
+  .cert-grid { grid-template-columns: 1fr; }
+  .hero-stats { grid-template-columns: repeat(2,1fr); }
+}
+</style>
+</head>
+<body>
+
+<!-- CURSORS -->
+<div class="cursor-ring" id="cursorRing"></div>
+<div class="cursor-dot2" id="cursorDot"></div>
+
+<!-- PARTICLES -->
+<canvas id="particleCanvas"></canvas>
+
+<!-- ══ NAV ══ -->
+<nav>
+  <div class="nav-wrap">
+    <a href="#hero" class="nav-logo">AP<span style="color:var(--p1);">_</span>Portfolio</a>
+    <ul class="nav-links">
+      <li><a href="#about">About</a></li>
+      <li><a href="#skills">Skills</a></li>
+      <li><a href="#featured">Featured</a></li>
+      <li><a href="#projects">Projects</a></li>
+      <li><a href="#experience">Experience</a></li>
+      <li><a href="#contact" class="nav-cta">Hire Me</a></li>
+    </ul>
+    <div class="hamburger" onclick="toggleMenu()"><span></span><span></span><span></span></div>
+  </div>
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="#about" onclick="toggleMenu()">About</a>
+    <a href="#skills" onclick="toggleMenu()">Skills</a>
+    <a href="#featured" onclick="toggleMenu()">Featured</a>
+    <a href="#projects" onclick="toggleMenu()">Projects</a>
+    <a href="#experience" onclick="toggleMenu()">Experience</a>
+    <a href="#contact" onclick="toggleMenu()">Contact</a>
+  </div>
+</nav>
+
+<!-- ══ HERO ══ -->
+<section id="hero">
+  <div class="hero-grid-overlay"></div>
+  <div class="container">
+    <div class="hero-inner">
+      <div class="reveal">
+        <div class="hero-badge">
+          <div class="badge-pulse"></div>
+          <span>MBA · Business Analytics · Surat, India</span>
+        </div>
+        <h1 class="hero-name">
+          Aabeda<br/>
+          <span class="grad">Patel</span>
+        </h1>
+        <div class="hero-role">Data Analytics Consultant &amp; MBA Candidate</div>
+        <p class="hero-desc">Transforming complex datasets into clear, actionable business decisions. Specialized in Predictive Modelling, Power BI Dashboards, and Big Data Analytics across multiple end-to-end projects.</p>
+        <div class="hero-actions">
+          <a href="#contact" class="btn-purple">Hire Me →</a>
+          <a href="resume.pdf" class="btn-purple" download style="background:linear-gradient(135deg,var(--p4),var(--pink));">⬇ Resume</a>
+          <a href="#projects" class="btn-outline-p">View Projects</a>
+          <a href="https://linkedin.com/in/aabedapatel-277839264" target="_blank" class="btn-resume">in LinkedIn</a>
+        </div>
+        <div class="hero-stats">
+          <div class="hstat"><div class="hstat-num">3</div><div class="hstat-lbl">Certifications</div></div>
+          <div class="hstat"><div class="hstat-num">5</div><div class="hstat-lbl">Tools Mastered</div></div>
+          <div class="hstat"><div class="hstat-num">3</div><div class="hstat-lbl">Internships</div></div>
+          <div class="hstat"><div class="hstat-num">8</div><div class="hstat-lbl">Projects</div></div>
+        </div>
+      </div>
+      <div class="hero-right reveal" style="transition-delay:0.25s;">
+        <div class="hcard3d"><div class="hcard3d-icon">📊</div><div><div class="hcard3d-title">Power BI Dashboards</div><div class="hcard3d-sub">13+ interactive dashboards built</div></div></div>
+        <div class="hcard3d"><div class="hcard3d-icon">🤖</div><div><div class="hcard3d-title">Machine Learning</div><div class="hcard3d-sub">Random Forest · K-Means · ARDL</div></div></div>
+        <div class="hcard3d"><div class="hcard3d-icon">🐍</div><div><div class="hcard3d-title">Python Analytics</div><div class="hcard3d-sub">pandas · scikit-learn · statsmodels</div></div></div>
+        <div class="hcard3d"><div class="hcard3d-icon">🔗</div><div><div class="hcard3d-title">KNIME Workflows</div><div class="hcard3d-sub">Low-code ML pipelines · Clustering</div></div></div>
+        <div class="hcard3d"><div class="hcard3d-icon">☁️</div><div><div class="hcard3d-title">AWS Cloud Analytics</div><div class="hcard3d-sub">Certified · Fundamentals of Analytics</div></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ ABOUT ══ -->
+<section id="about">
+  <div class="container">
+    <div class="about-grid">
+      <div class="reveal">
+        <div class="label">About Me</div>
+        <div class="sec-head" style="margin-bottom:28px;">
+          <h2>Analyst.<br/><em>Problem Solver.</em></h2>
+        </div>
+        <div class="about-text">
+          <p>I'm an MBA Business Analytics candidate at <strong>S.R. Luthra Institute of Management, Sarvajanik University</strong> (graduating 2026), based in Surat, Gujarat. My work bridges data science, business strategy, and visual storytelling.</p>
+          <p>I've completed multiple end-to-end analytics projects spanning aviation, renewable energy, retail, fintech, healthcare, and public policy — applying Python, KNIME, and Power BI to real business problems with measurable outcomes.</p>
+          <p>Through internships at <strong>KPI Green Energy Ltd</strong> and <strong>KalpShree Investments</strong>, I've observed how analytics drives decisions in live industry environments.</p>
+        </div>
+        <div class="seeking-box">
+          <div class="seeking-title">// Currently Seeking</div>
+          <div class="seeking-item">Data Analyst Internship</div>
+          <div class="seeking-item">Business Intelligence Roles</div>
+          <div class="seeking-item">Data Analytics Freelance Projects</div>
+        </div>
+      </div>
+      <div class="reveal" style="transition-delay:0.15s;">
+        <div class="info-table">
+          <div class="info-row"><div class="info-lbl">Education</div><div class="info-val">MBA · Business Analytics<br/>S.R. Luthra Institute of Management<br/>Sarvajanik University · 2024–2026<br/><span style="color:var(--text2);font-size:0.8rem;">BBA · Marketing · 2021–2024</span></div></div>
+          <div class="info-row"><div class="info-lbl">Location</div><div class="info-val">Surat, Gujarat, India</div></div>
+          <div class="info-row"><div class="info-lbl">Email</div><div class="info-val"><a href="/cdn-cgi/l/email-protection#bcccddddded9d8dd89fcdbd1ddd5d092dfd3d1"><span class="__cf_email__" data-cfemail="31415050535455500471565c50585d1f525e5c">[email&#160;protected]</span></a></div></div>
+          <div class="info-row"><div class="info-lbl">LinkedIn</div><div class="info-val"><a href="https://linkedin.com/in/aabedapatel-277839264" target="_blank">aabedapatel-277839264</a></div></div>
+          <div class="info-row"><div class="info-lbl">Status</div><div class="info-val"><span class="sdot"></span>Open to opportunities</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ SKILLS ══ -->
+<section id="skills">
+  <div class="container">
+    <div class="sec-head reveal">
+      <div class="label">Technical Expertise</div>
+      <h2>Tools &amp; <em>Skills</em></h2>
+      <p>Hands-on proficiency built through end-to-end analytics projects and industry internships.</p>
+    </div>
+    <div class="skills-grid reveal" style="transition-delay:0.1s;">
+      <div class="skill-card"><div class="sk-icon">📊</div><div class="sk-name">Microsoft Power BI</div><div class="sk-desc">13+ interactive dashboards with star schemas, DAX measures, drill-throughs, and custom visuals.</div></div>
+      <div class="skill-card"><div class="sk-icon">🐍</div><div class="sk-name">Python</div><div class="sk-desc">pandas · numpy · scikit-learn · statsmodels · scipy · seaborn · matplotlib applied in Colab.</div></div>
+      <div class="skill-card"><div class="sk-icon">🔗</div><div class="sk-name">KNIME Analytics</div><div class="sk-desc">End-to-end low-code ML pipelines including clustering, regression, and data normalisation workflows.</div></div>
+      <div class="skill-card"><div class="sk-icon">🤖</div><div class="sk-name">Machine Learning</div><div class="sk-desc">Random Forest (R²=0.80), K-Means clustering, ARDL time-series, linear regression, GLM mixed effects.</div></div>
+      <div class="skill-card"><div class="sk-icon">📈</div><div class="sk-name">Statistical Analysis</div><div class="sk-desc">Cointegration, Granger causality, ANOVA, Wilcoxon, Friedman, Shapiro-Wilk normality tests.</div></div>
+      <div class="skill-card"><div class="sk-icon">☁️</div><div class="sk-name">AWS &amp; Cloud</div><div class="sk-desc">AWS Certified Analytics Fundamentals. Cloud-based data pipelines, storage and architecture basics.</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ FEATURED PROJECTS ══ -->
+<section id="featured">
+  <div class="container">
+    <div class="sec-head reveal">
+      <div class="label">Featured Work</div>
+      <h2>Top <em>Projects</em></h2>
+      <p>4 strongest projects — each with tabbed breakdown of Overview, Methodology, Key Insights, and Conclusion.</p>
+    </div>
+    <div class="featured-grid reveal">
+
+      <!-- FEATURED 1: CRYPTO — FULL WIDTH -->
+      <div class="feat-card-wide">
+        <div class="carousel-wrap" id="wrap-f1">
+          <div class="carousel-track" id="track-f1"></div>
+          <button class="cbtn prev" onclick="cMove('f1',-1)">‹</button>
+          <button class="cbtn next" onclick="cMove('f1',1)">›</button>
+          <div class="cdots" id="dots-f1"></div>
+          <div class="img-badge" id="badge-f1" style="display:none;"></div>
+          <button class="add-img-btn" onclick="tUpload('f1')">+</button>
+          <input type="file" accept="image/*" multiple class="file-input-hidden" id="input-f1" onchange="hUpload('f1',this)"/>
+        </div>
+        <div class="proj-body">
+          <div class="proj-num">Featured 01 · Fintech · Econometrics</div>
+          <div class="proj-title">Cryptocurrency Pair Trading Analysis</div>
+          <div class="tab-nav">
+            <button class="tab-btn active" onclick="switchTab('f1','overview',this)">Overview</button>
+            <button class="tab-btn" onclick="switchTab('f1','methodology',this)">Methodology</button>
+            <button class="tab-btn" onclick="switchTab('f1','insights',this)">Key Insights</button>
+            <button class="tab-btn" onclick="switchTab('f1','conclusion',this)">Conclusion</button>
+          </div>
+          <div class="tab-panel active" id="f1-overview">4 major cryptocurrencies (BTC, ETH, XRP, XLM) analysed for pair trading opportunities using a sequential econometric framework. Supported by a 30-paper literature review on crypto market efficiency and statistical arbitrage.</div>
+          <div class="tab-panel" id="f1-methodology"><div class="tab-panel tools-row"><span class="method-tag">ADF Stationarity</span><span class="method-tag">Engle-Granger Cointegration</span><span class="method-tag">Granger Causality</span><span class="method-tag">ARDL Model</span><span class="method-tag">Python · statsmodels</span></div></div>
+          <div class="tab-panel" id="f1-insights"><ul><li>BTC–ETH pair showed strongest long-run cointegration signal</li><li>XRP demonstrated leading Granger causality over XLM in 3 of 4 periods</li><li>ARDL bounds test confirmed non-spurious long-run relationships</li><li>Price discovery primarily driven by BTC market movements</li></ul></div>
+          <div class="tab-panel" id="f1-conclusion">Pair trading strategy is statistically viable for BTC–ETH. Short-run deviations revert to long-run equilibrium, validating a mean-reversion approach. XRP–XLM pair suitable for directional trades based on causality findings.</div>
+          <div class="ptags"><span class="ptag tool">Python</span><span class="ptag tool">statsmodels</span><span class="ptag tool">ARDL</span><span class="ptag">Fintech</span><span class="ptag">Econometrics</span></div>
+          <div class="pmetrics">
+            <div><div class="mval">4</div><div class="mlbl">Crypto Pairs</div></div>
+            <div><div class="mval">30</div><div class="mlbl">Papers Reviewed</div></div>
+            <div><div class="mval">4</div><div class="mlbl">Test Methods</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- FEATURED 2: RETAIL -->
+      <div class="feat-card">
+        <div class="carousel-wrap" id="wrap-f2">
+          <div class="carousel-track" id="track-f2"></div>
+          <button class="cbtn prev" onclick="cMove('f2',-1)">‹</button>
+          <button class="cbtn next" onclick="cMove('f2',1)">›</button>
+          <div class="cdots" id="dots-f2"></div>
+          <div class="img-badge" id="badge-f2" style="display:none;"></div>
+          <button class="add-img-btn" onclick="tUpload('f2')">+</button>
+          <input type="file" accept="image/*" multiple class="file-input-hidden" id="input-f2" onchange="hUpload('f2',this)"/>
+        </div>
+        <div class="proj-body">
+          <div class="proj-num">Featured 02 · Power BI · FMCG Retail</div>
+          <div class="proj-title">Indian FMCG Retail Chain Analytics</div>
+          <div class="tab-nav">
+            <button class="tab-btn active" onclick="switchTab('f2','overview',this)">Overview</button>
+            <button class="tab-btn" onclick="switchTab('f2','dashboards',this)">Dashboards</button>
+            <button class="tab-btn" onclick="switchTab('f2','insights',this)">Key Insights</button>
+            <button class="tab-btn" onclick="switchTab('f2','conclusion',this)">Conclusion</button>
+          </div>
+          <div class="tab-panel active" id="f2-overview">8 Power BI dashboards on a star schema for a 30-city FMCG retail chain covering ₹235M in total sales. Analysed loyalty, regional performance, and seasonal discount impact.</div>
+          <div class="tab-panel" id="f2-dashboards"><ul><li>Sales Performance Overview</li><li>Regional Store Comparison</li><li>Customer Loyalty Analysis</li><li>Product Category Breakdown</li><li>Seasonal Discount Impact</li><li>Profit Margin Drillthrough</li><li>Top SKU Ranking</li><li>Executive Summary</li></ul></div>
+          <div class="tab-panel" id="f2-insights"><ul><li>Loyalty penetration only 18% across all stores</li><li>Seasonal discounts increased sales by 34% in Q3</li><li>South region stores generated highest profit margin at 27%</li><li>Top 20% SKUs drove 68% of total revenue (Pareto finding)</li></ul></div>
+          <div class="tab-panel" id="f2-conclusion">Star schema design enabled sub-second query performance across 1M+ rows. Loyalty gap of 82% represents the single largest growth opportunity for the business. Recommended targeted loyalty campaigns for Tier-2 cities.</div>
+          <div class="ptags"><span class="ptag tool">Power BI</span><span class="ptag tool">DAX</span><span class="ptag tool">Star Schema</span><span class="ptag">FMCG</span></div>
+          <div class="pmetrics">
+            <div><div class="mval">₹235M</div><div class="mlbl">Total Sales</div></div>
+            <div><div class="mval">8</div><div class="mlbl">Dashboards</div></div>
+            <div><div class="mval">30</div><div class="mlbl">Cities</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- FEATURED 3: FLIGHT DELAY -->
+      <div class="feat-card">
+        <div class="carousel-wrap" id="wrap-f3">
+          <div class="carousel-track" id="track-f3"></div>
+          <button class="cbtn prev" onclick="cMove('f3',-1)">‹</button>
+          <button class="cbtn next" onclick="cMove('f3',1)">›</button>
+          <div class="cdots" id="dots-f3"></div>
+          <div class="img-badge" id="badge-f3" style="display:none;"></div>
+          <button class="add-img-btn" onclick="tUpload('f3')">+</button>
+          <input type="file" accept="image/*" multiple class="file-input-hidden" id="input-f3" onchange="hUpload('f3',this)"/>
+        </div>
+        <div class="proj-body">
+          <div class="proj-num">Featured 03 · Aviation · Machine Learning</div>
+          <div class="proj-title">U.S. Flight Delay Prediction</div>
+          <div class="tab-nav">
+            <button class="tab-btn active" onclick="switchTab('f3','overview',this)">Overview</button>
+            <button class="tab-btn" onclick="switchTab('f3','model',this)">Model</button>
+            <button class="tab-btn" onclick="switchTab('f3','insights',this)">Key Insights</button>
+            <button class="tab-btn" onclick="switchTab('f3','conclusion',this)">Conclusion</button>
+          </div>
+          <div class="tab-panel active" id="f3-overview">Random Forest regression on 13 years of FAA data (4,408 records) to predict total flight delays. Achieved R²=0.80, validating strong predictive power of flight volume as a delay driver.</div>
+          <div class="tab-panel" id="f3-model"><div class="tab-panel tools-row"><span class="method-tag">Random Forest Regression</span><span class="method-tag">Feature Importance</span><span class="method-tag">Cross-Validation</span><span class="method-tag">scikit-learn</span><span class="method-tag">Google Colab</span></div></div>
+          <div class="tab-panel" id="f3-insights"><ul><li>Flight volume explains 70.6% of total delay variance</li><li>ATL, ORD, DFW identified as highest-delay hub airports</li><li>Carrier delays peak in summer months (June–August)</li><li>Weather delays more severe in Q4 at Northern hubs</li></ul></div>
+          <div class="tab-panel" id="f3-conclusion">Random Forest outperformed linear regression by 22% in RMSE. Model recommends proactive capacity management at high-volume hubs during summer. FAA can use predictions for staffing and gate optimization.</div>
+          <div class="ptags"><span class="ptag tool">Python</span><span class="ptag tool">scikit-learn</span><span class="ptag tool">Colab</span><span class="ptag">Aviation</span></div>
+          <div class="pmetrics">
+            <div><div class="mval">R²=0.80</div><div class="mlbl">Model Accuracy</div></div>
+            <div><div class="mval">4,408</div><div class="mlbl">FAA Records</div></div>
+            <div><div class="mval">13</div><div class="mlbl">Years of Data</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- FEATURED 4: AADHAAR -->
+      <div class="feat-card" style="grid-column: 1 / -1; display:grid; grid-template-columns: 1fr 1fr; min-height:380px;">
+        <div class="carousel-wrap" id="wrap-f4" style="height:100%; min-height:320px; border-right:1px solid var(--border);">
+          <div class="carousel-track" id="track-f4"></div>
+          <button class="cbtn prev" onclick="cMove('f4',-1)">‹</button>
+          <button class="cbtn next" onclick="cMove('f4',1)">›</button>
+          <div class="cdots" id="dots-f4"></div>
+          <div class="img-badge" id="badge-f4" style="display:none;"></div>
+          <button class="add-img-btn" onclick="tUpload('f4')">+</button>
+          <input type="file" accept="image/*" multiple class="file-input-hidden" id="input-f4" onchange="hUpload('f4',this)"/>
+        </div>
+        <div class="proj-body">
+          <div class="proj-num">Featured 04 · Policy Analytics · GovTech</div>
+          <div class="proj-title">Aadhaar Ecosystem Health Framework</div>
+          <div class="tab-nav">
+            <button class="tab-btn active" onclick="switchTab('f4','overview',this)">Overview</button>
+            <button class="tab-btn" onclick="switchTab('f4','ihs',this)">IHS Score</button>
+            <button class="tab-btn" onclick="switchTab('f4','insights',this)">Key Insights</button>
+            <button class="tab-btn" onclick="switchTab('f4','conclusion',this)">Conclusion</button>
+          </div>
+          <div class="tab-panel active" id="f4-overview">Designed the Identity Health Score (IHS) — a custom composite metric — to evaluate Aadhaar operational health across 28 Indian states using sigma-based tier classification on 590K+ cleaned records.</div>
+          <div class="tab-panel" id="f4-ihs"><ul><li>IHS = weighted avg. of authentication rate, enrolment coverage, update frequency, and error rate</li><li>Sigma-based tiers: Platinum / Gold / Silver / Needs Attention</li><li>State-wise ranking dashboard built in Python + seaborn</li><li>590,000+ UIDAI records cleaned and normalised</li></ul></div>
+          <div class="tab-panel" id="f4-insights"><ul><li>8 states fall in "Needs Attention" tier — primarily NE India</li><li>Kerala and Maharashtra lead IHS rankings nationally</li><li>Authentication errors spike in rural low-connectivity zones</li><li>Urban-rural enrolment gap narrowing but still significant</li></ul></div>
+          <div class="tab-panel" id="f4-conclusion">IHS provides UIDAI a replicable monitoring framework. Sigma-based tiering enables targeted interventions. Recommended deploying mobile Aadhaar units in Tier-4 districts based on IHS scores.</div>
+          <div class="ptags"><span class="ptag tool">Python</span><span class="ptag tool">pandas</span><span class="ptag tool">seaborn</span><span class="ptag">GovTech</span><span class="ptag">Policy</span></div>
+          <div class="pmetrics">
+            <div><div class="mval">590K+</div><div class="mlbl">Records</div></div>
+            <div><div class="mval">28</div><div class="mlbl">States Ranked</div></div>
+            <div><div class="mval">4</div><div class="mlbl">IHS Tiers</div></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ══ ALL PROJECTS ══ -->
+<section id="projects">
+  <div class="container">
+    <div class="sec-head reveal">
+      <div class="label">Full Portfolio</div>
+      <h2>All <em>8 Projects</em></h2>
+      <p>Complete project catalogue. Hover images to add dashboard screenshots via the + button.</p>
+    </div>
+    <div class="proj-grid reveal">
+
+      <!-- P1 -->
+      <div class="feat-card">
+        <div class="carousel-wrap" id="wrap-p1"><div class="carousel-track" id="track-p1"></div><button class="cbtn prev" onclick="cMove('p1',-1)">‹</button><button class="cbtn next" onclick="cMove('p1',1)">›</button><div class="cdots" id="dots-p1"></div><div class="img-badge" id="badge-p1" style="display:none;"></div></div>
+        <div class="proj-body">
+          <div class="proj-num">Project 01 · Power BI · FMCG</div>
+          <div class="proj-title" style="font-size:1.1rem;">Indian FMCG Retail Chain Analytics</div>
+          <div class="tab-nav"><button class="tab-btn active" onclick="switchTab('p1','overview',this)">Overview</button><button class="tab-btn" onclick="switchTab('p1','insights',this)">Insights</button><button class="tab-btn" onclick="switchTab('p1','tools',this)">Tools</button></div>
+          <div class="tab-panel active" id="p1-overview">8 Power BI dashboards on star schema for 30-city FMCG chain. ₹235M total sales analysed across loyalty, region, and seasonality dimensions.</div>
+          <div class="tab-panel" id="p1-insights"><ul><li>Loyalty penetration only 18%</li><li>Seasonal discounts boosted sales by 34%</li><li>South region highest margin at 27%</li></ul></div>
+          <div class="tab-panel" id="p1-tools"><div class="tools-row"><span class="method-tag">Power BI</span><span class="method-tag">DAX</span><span class="method-tag">Star Schema</span><span class="method-tag">SQL</span></div></div>
+          <div class="pmetrics"><div><div class="mval">₹235M</div><div class="mlbl">Sales</div></div><div><div class="mval">8</div><div class="mlbl">Dashboards</div></div></div>
+        </div>
+      </div>
+
+      <!-- P2 -->
+      <div class="feat-card">
+        <div class="carousel-wrap" id="wrap-p2"><div class="carousel-track" id="track-p2"></div><button class="cbtn prev" onclick="cMove('p2',-1)">‹</button><button class="cbtn next" onclick="cMove('p2',1)">›</button><div class="cdots" id="dots-p2"></div><div class="img-badge" id="badge-p2" style="display:none;"></div></div>
+        <div class="proj-body">
+          <div class="proj-num">Project 02 · Policy · GovTech</div>
+          <div class="proj-title" style="font-size:1.1rem;">Aadhaar Ecosystem Health Framework</div>
+          <div class="tab-nav"><button class="tab-btn active" onclick="switchTab('p2','overview',this)">Overview</button><button class="tab-btn" onclick="switchTab('p2','insights',this)">Insights</button><button class="tab-btn" onclick="switchTab('p2','tools',this)">Tools</button></div>
+          <div class="tab-panel active" id="p2-overview">Custom Identity Health Score (IHS) to rank 28 Indian states on Aadhaar operational health using sigma-based tier classification on 590K+ records.</div>
+          <div class="tab-panel" id="p2-insights"><ul><li>8 states in "Needs Attention" tier</li><li>Kerala and Maharashtra lead nationally</li><li>Rural authentication errors highest in NE states</li></ul></div>
+          <div class="tab-panel" id="p2-tools"><div class="tools-row"><span class="method-tag">Python</span><span class="method-tag">pandas</span><span class="method-tag">seaborn</span><span class="method-tag">Sigma Tiers</span></div></div>
+          <div class="pmetrics"><div><div class="mval">590K+</div><div class="mlbl">Records</div></div><div><div class="mval">28</div><div class="mlbl">States</div></div></div>
+        </div>
+      </div>
+
+      <!-- P3 -->
+      <div class="feat-card">
+        <div class="carousel-wrap" id="wrap-p3"><div class="carousel-track" id="track-p3"></div><button class="cbtn prev" onclick="cMove('p3',-1)">‹</button><button class="cbtn next" onclick="cMove('p3',1)">›</button><div class="cdots" id="dots-p3"></div><div class="img-badge" id="badge-p3" style="display:none;"></div></div>
+        <div class="proj-body">
+          <div class="proj-num">Project 03 · Power BI · Operations</div>
+          <div class="proj-title" style="font-size:1.1rem;">Superstore Business Performance</div>
+          <div class="tab-nav"><button class="tab-btn active" onclick="switchTab('p3','overview',this)">Overview</button><button class="tab-btn" onclick="switchTab('p3','insights',this)">Insights</button><button class="tab-btn" onclick="switchTab('p3','tools',this)">Tools</button></div>
+          <div class="tab-panel active" id="p3-overview">5 Power BI dashboards across sales, products, geography, customers, and operations for a 4-year retail dataset with 9,994 transactions.</div>
+          <div class="tab-panel" id="p3-insights"><ul><li>Profit margin 12.47% vs 15% target — gap identified</li><li>Technology category most profitable per unit</li><li>West region over-indexed in discounting</li></ul></div>
+          <div class="tab-panel" id="p3-tools"><div class="tools-row"><span class="method-tag">Power BI</span><span class="method-tag">DAX</span><span class="method-tag">Data Modelling</span></div></div>
+          <div class="pmetrics"><div><div class="mval">₹2.3M</div><div class="mlbl">Sales</div></div><div><div class="mval">5</div><div class="mlbl">Dashboards</div></div></div>
+        </div>
+      </div>
+
+      <!-- P4 -->
+      <div class="feat-card">
+        <div class="carousel-wrap" id="wrap-p4"><div class="carousel-track" id="track-p4"></div><button class="cbtn prev" onclick="cMove('p4',-1)">‹</button><button class="cbtn next" onclick="cMove('p4',1)">›</button><div class="cdots" id="dots-p4"></div><div class="img-badge" id="badge-p4" style="display:none;"></div></div>
+        <div class="proj-body">
+          <div class="proj-num">Project 04 · Fintech · Econometrics</div>
+          <div class="proj-title" style="font-size:1.1rem;">Cryptocurrency Pair Trading</div>
+          <div class="tab-nav"><button class="tab-btn active" onclick="switchTab('p4','overview',this)">Overview</button><button class="tab-btn" onclick="switchTab('p4','insights',this)">Insights</button><button class="tab-btn" onclick="switchTab('p4','tools',this)">Tools</button></div>
+          <div class="tab-panel active" id="p4-overview">Sequential econometric framework on BTC, ETH, XRP, XLM to identify statistically viable pair trading opportunities using cointegration testing.</div>
+          <div class="tab-panel" id="p4-insights"><ul><li>BTC–ETH strongest cointegration pair</li><li>XRP leads XLM in Granger causality</li><li>ARDL confirms non-spurious long-run relationships</li></ul></div>
+          <div class="tab-panel" id="p4-tools"><div class="tools-row"><span class="method-tag">Python</span><span class="method-tag">ARDL</span><span class="method-tag">statsmodels</span><span class="method-tag">ADF Test</span></div></div>
+          <div class="pmetrics"><div><div class="mval">4</div><div class="mlbl">Crypto Pairs</div></div><div><div class="mval">30</div><div class="mlbl">Papers</div></div></div>
+        </div>
+      </div>
+
+      <!-- P5 -->
+      <div class="feat-card">
+        <div class="carousel-wrap" id="wrap-p5"><div class="carousel-track" id="track-p5"></div><button class="cbtn prev" onclick="cMove('p5',-1)">‹</button><button class="cbtn next" onclick="cMove('p5',1)">›</button><div class="cdots" id="dots-p5"></div><div class="img-badge" id="badge-p5" style="display:none;"></div></div>
+        <div class="proj-body">
+          <div class="proj-num">Project 05 · Aviation · ML</div>
+          <div class="proj-title" style="font-size:1.1rem;">U.S. Flight Delay Prediction</div>
+          <div class="tab-nav"><button class="tab-btn active" onclick="switchTab('p5','overview',this)">Overview</button><button class="tab-btn" onclick="switchTab('p5','insights',this)">Insights</button><button class="tab-btn" onclick="switchTab('p5','tools',this)">Tools</button></div>
+          <div class="tab-panel active" id="p5-overview">Random Forest regression on 13 years of FAA data. R²=0.80 achieved. Flight volume identified as primary delay predictor across U.S. hub airports.</div>
+          <div class="tab-panel" id="p5-insights"><ul><li>Flight volume explains 70.6% of delay variance</li><li>ATL, ORD, DFW are highest-delay hubs</li><li>Summer months (Jun–Aug) peak for carrier delays</li></ul></div>
+          <div class="tab-panel" id="p5-tools"><div class="tools-row"><span class="method-tag">Random Forest</span><span class="method-tag">scikit-learn</span><span class="method-tag">Python</span><span class="method-tag">Colab</span></div></div>
+          <div class="pmetrics"><div><div class="mval">R²=0.80</div><div class="mlbl">Accuracy</div></div><div><div class="mval">4,408</div><div class="mlbl">Records</div></div></div>
+        </div>
+      </div>
+
+      <!-- P6 -->
+      <div class="feat-card">
+        <div class="carousel-wrap" id="wrap-p6"><div class="carousel-track" id="track-p6"></div><button class="cbtn prev" onclick="cMove('p6',-1)">‹</button><button class="cbtn next" onclick="cMove('p6',1)">›</button><div class="cdots" id="dots-p6"></div><div class="img-badge" id="badge-p6" style="display:none;"></div></div>
+        <div class="proj-body">
+          <div class="proj-num">Project 06 · Energy · Clustering</div>
+          <div class="proj-title" style="font-size:1.1rem;">Renewable Energy Efficiency Study</div>
+          <div class="tab-nav"><button class="tab-btn active" onclick="switchTab('p6','overview',this)">Overview</button><button class="tab-btn" onclick="switchTab('p6','clusters',this)">Clusters</button><button class="tab-btn" onclick="switchTab('p6','insights',this)">Insights</button><button class="tab-btn" onclick="switchTab('p6','tools',this)">Tools</button></div>
+          <div class="tab-panel active" id="p6-overview">KNIME pipeline segmenting 7 renewable energy types into performance clusters using K-Means. Objective: rank energy sources by operational efficiency for policy recommendation.</div>
+          <div class="tab-panel" id="p6-clusters"><ul><li>Cluster 1 — High Efficiency: Biomass, Solar</li><li>Cluster 2 — Moderate: Wind, Hydro</li><li>Cluster 3 — Emerging: Tidal, Wave, Geothermal</li></ul></div>
+          <div class="tab-panel" id="p6-insights"><ul><li>Biomass leads on consistency and efficiency score</li><li>Solar ranks highest in scalability potential</li><li>Tidal and Wave limited by geographic constraints</li></ul></div>
+          <div class="tab-panel" id="p6-tools"><div class="tools-row"><span class="method-tag">KNIME</span><span class="method-tag">K-Means Clustering</span><span class="method-tag">Normalisation</span><span class="method-tag">Silhouette Analysis</span></div></div>
+          <div class="pmetrics"><div><div class="mval">7</div><div class="mlbl">Energy Types</div></div><div><div class="mval">3</div><div class="mlbl">Clusters</div></div></div>
+        </div>
+      </div>
+
+      <!-- P7 -->
+      <div class="feat-card">
+        <div class="carousel-wrap" id="wrap-p7"><div class="carousel-track" id="track-p7"></div><button class="cbtn prev" onclick="cMove('p7',-1)">‹</button><button class="cbtn next" onclick="cMove('p7',1)">›</button><div class="cdots" id="dots-p7"></div><div class="img-badge" id="badge-p7" style="display:none;"></div></div>
+        <div class="proj-body">
+          <div class="proj-num">Project 07 · Marketing · Regression</div>
+          <div class="proj-title" style="font-size:1.1rem;">Facebook Sentiment → H&amp;M Revenue</div>
+          <div class="tab-nav"><button class="tab-btn active" onclick="switchTab('p7','overview',this)">Overview</button><button class="tab-btn" onclick="switchTab('p7','insights',this)">Insights</button><button class="tab-btn" onclick="switchTab('p7','tools',this)">Tools</button></div>
+          <div class="tab-panel active" id="p7-overview">Linear regression in KNIME on 24 quarterly records and 34 Facebook engagement variables to quantify social media's impact on H&M revenue (2009–2014).</div>
+          <div class="tab-panel" id="p7-insights"><ul><li>UGC posts show r=0.52 correlation with revenue</li><li>UGC is the strongest predictor among 34 variables</li><li>Branded posts had r=0.31, significantly weaker</li></ul></div>
+          <div class="tab-panel" id="p7-tools"><div class="tools-row"><span class="method-tag">KNIME</span><span class="method-tag">Linear Regression</span><span class="method-tag">Pearson r</span><span class="method-tag">Feature Selection</span></div></div>
+          <div class="pmetrics"><div><div class="mval">r=0.52</div><div class="mlbl">UGC Corr.</div></div><div><div class="mval">34</div><div class="mlbl">Variables</div></div></div>
+        </div>
+      </div>
+
+      <!-- P8 -->
+      <div class="feat-card">
+        <div class="carousel-wrap" id="wrap-p8"><div class="carousel-track" id="track-p8"></div><button class="cbtn prev" onclick="cMove('p8',-1)">‹</button><button class="cbtn next" onclick="cMove('p8',1)">›</button><div class="cdots" id="dots-p8"></div><div class="img-badge" id="badge-p8" style="display:none;"></div></div>
+        <div class="proj-body">
+          <div class="proj-num">Project 08 · Healthcare · Clinical Stats</div>
+          <div class="proj-title" style="font-size:1.1rem;">Aloe Juice Clinical Study Analysis</div>
+          <div class="tab-nav"><button class="tab-btn active" onclick="switchTab('p8','overview',this)">Overview</button><button class="tab-btn" onclick="switchTab('p8','methods',this)">Methods</button><button class="tab-btn" onclick="switchTab('p8','findings',this)">Findings</button><button class="tab-btn" onclick="switchTab('p8','conclusion',this)">Conclusion</button></div>
+          <div class="tab-panel active" id="p8-overview">Statistical analysis of a randomised clinical study: 23 cancer patients, 6-week Aloe vera juice intervention. Assessed patient-reported outcomes using advanced non-parametric tests.</div>
+          <div class="tab-panel" id="p8-methods"><div class="tools-row"><span class="method-tag">GLM Mixed Effects</span><span class="method-tag">Wilcoxon Test</span><span class="method-tag">Friedman Test</span><span class="method-tag">scipy · statsmodels</span></div></div>
+          <div class="tab-panel" id="p8-findings"><ul><li>Time effect significant: p&lt;0.05 at Week 4 &amp; 6</li><li>Treatment group effect: p=0.4529 (not significant)</li><li>Symptom scores improved 18% over study period</li></ul></div>
+          <div class="tab-panel" id="p8-conclusion">Time-dependent improvement in outcomes suggests natural recovery, not treatment-specific effect. Results indicate need for larger sample size (n≥60) and double-blind design to isolate Aloe vera's therapeutic effect.</div>
+          <div class="pmetrics"><div><div class="mval">23</div><div class="mlbl">Patients</div></div><div><div class="mval">p&lt;0.05</div><div class="mlbl">Significance</div></div></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ══ EXPERIENCE ══ -->
+<section id="experience">
+  <div class="container">
+    <div class="exp-layout">
+      <div class="reveal">
+        <div class="label">Work History</div>
+        <div class="sec-head" style="margin-bottom:0;"><h2>Industry<br/><em>Experience</em></h2></div>
+        <p>Industry internships in renewable energy and financial investment environments — observing analytics in practice.</p>
+      </div>
+      <div class="exp-list reveal" style="transition-delay:0.15s;">
+        <div class="exp-item">
+          <div class="edate">Sep 2025<br/>— Nov 2025</div>
+          <div><div class="ecompany">KalpShree Investments</div><div class="erole">Internship Trainee</div><div class="edesc">Observed investment operations and financial workflows at a Surat-based firm. Gained exposure to how financial data and analytics inform investment decisions and portfolio management in the Indian market.</div></div>
+        </div>
+        <div class="exp-item">
+          <div class="edate">May 2025<br/>— Jun 2025</div>
+          <div><div class="ecompany">KPI Green Energy Ltd · KP Group</div><div class="erole">Summer Intern — MBA Programme</div><div class="edesc">Observed solar plant performance monitoring and how BI tools drive operational efficiency in renewable energy. Gained exposure to energy sector data practices and sustainability-focused analytics.</div></div>
+        </div>
+        <div class="exp-item">
+          <div class="edate">May 2023<br/>— Jun 2023</div>
+          <div><div class="ecompany">KP Energy Ltd · KP Group</div><div class="erole">Summer Intern — BBA Programme</div><div class="edesc">First industry internship. Observed renewable energy sector operations and applied theoretical business knowledge to real-world context, building foundational industry understanding.</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ CERTIFICATIONS ══ -->
+<section id="certifications">
+  <div class="container">
+    <div class="sec-head reveal">
+      <div class="label">Credentials</div>
+      <h2>Certifications &amp; <em>Awards</em></h2>
+    </div>
+    <div class="cert-grid reveal" style="transition-delay:0.1s;">
+      <div class="cert-card"><div class="cicon">☁️</div><div class="cissuer">Amazon Web Services</div><div class="cname">Fundamentals of Analytics on AWS — Part 1</div></div>
+      <div class="cert-card"><div class="cicon">🔗</div><div class="cissuer">KNIME</div><div class="cname">Low-Code ML with KNIME Analytics Platform</div></div>
+      <div class="cert-card"><div class="cicon">📊</div><div class="cissuer">Microsoft</div><div class="cname">Advanced Microsoft Power BI</div></div>
+      <div class="cert-card"><div class="cicon">🏆</div><div class="cissuer">S.R. Luthra Institute</div><div class="cname">1st Rank — Poster Making Competition</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ CONTACT ══ -->
+<section id="contact">
+  <div class="container">
+    <div class="contact-wrap">
+      <div class="reveal">
+        <div class="label">Get In Touch</div>
+        <h2>Let's work<br/><em>together.</em></h2>
+        <p>Open to Data Analyst internships, BI roles, and freelance analytics projects. Based in Surat — available for remote engagements worldwide.</p>
+        <a href="/cdn-cgi/l/email-protection#31415050535455500471565c50585d1f525e5c" class="contact-email"><span class="__cf_email__" data-cfemail="443425252621202571042329252d286a272b29">[email&#160;protected]</span></a>
+      </div>
+      <div class="clinks reveal" style="transition-delay:0.15s;">
+        <a href="/cdn-cgi/l/email-protection#087869696a6d6c693d486f65696164266b6765" class="clink"><div><div class="clink-lbl">Email</div><div class="clink-val"><span class="__cf_email__" data-cfemail="552534343730313460153238343c397b363a38">[email&#160;protected]</span></div></div><div class="clink-arrow">→</div></a>
+        <a href="https://linkedin.com/in/aabedapatel-277839264" target="_blank" class="clink"><div><div class="clink-lbl">LinkedIn</div><div class="clink-val">aabedapatel-277839264</div></div><div class="clink-arrow">→</div></a>
+        <a href="https://github.com/aabedaaiyyub" target="_blank" class="clink"><div><div class="clink-lbl">GitHub</div><div class="clink-val">github.com/aabedaaiyyub</div></div><div class="clink-arrow">→</div></a>
+        <a href="https://aabedaaiyyub.github.io" target="_blank" class="clink"><div><div class="clink-lbl">Portfolio</div><div class="clink-val">aabedaaiyyub.github.io</div></div><div class="clink-arrow">→</div></a>
+        <a href="resume.pdf" download class="clink"><div><div class="clink-lbl">Resume</div><div class="clink-val">Download PDF ⬇</div></div><div class="clink-arrow">→</div></a>
+        <div class="clink" style="cursor:default;"><div><div class="clink-lbl">Status</div><div class="clink-val"><span class="sdot"></span>Available — Open to Opportunities</div></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="fl">© 2026 Aabeda Aiyub Patel · All Rights Reserved</div>
+  <div class="fr">MBA Business Analytics · Sarvajanik University · <span>Surat</span></div>
+</footer>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+/* ══ CUSTOM CURSOR ══ */
+const ring = document.getElementById('cursorRing');
+const dot2 = document.getElementById('cursorDot');
+let mx = 0, my = 0, rx = 0, ry = 0;
+document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; dot2.style.left = mx + 'px'; dot2.style.top = my + 'px'; });
+(function animRing() {
+  rx += (mx - rx) * 0.12; ry += (my - ry) *.12;
+  ring.style.left = rx + 'px'; ring.style.top = ry + 'px';
+  requestAnimationFrame(animRing);
+})();
+document.querySelectorAll('a,button,.hcard3d,.skill-card,.cert-card').forEach(el => {
+  el.addEventListener('mouseenter', () => { ring.style.width = '50px'; ring.style.height = '50px'; ring.style.borderColor = 'var(--pink)'; });
+  el.addEventListener('mouseleave', () => { ring.style.width = '36px'; ring.style.height = '36px'; ring.style.borderColor = 'var(--p1)'; });
+});
+
+/* ══ PARTICLES ══ */
+const canvas = document.getElementById('particleCanvas');
+const ctx = canvas.getContext('2d');
+let W, H, particles = [];
+function resize() { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
+resize(); window.addEventListener('resize', resize);
+for (let i = 0; i < 80; i++) particles.push({
+  x: Math.random() * window.innerWidth, y: Math.random() * window.innerHeight,
+  r: Math.random() * 1.5 + 0.3,
+  vx: (Math.random() - 0.5) * 0.3, vy: (Math.random() - 0.5) * 0.3,
+  a: Math.random() * 0.6 + 0.1,
+  c: Math.random() > 0.5 ? '139,92,246' : '236,72,153'
+});
+function drawParticles() {
+  ctx.clearRect(0, 0, W, H);
+  particles.forEach(p => {
+    p.x += p.vx; p.y += p.vy;
+    if (p.x < 0) p.x = W; if (p.x > W) p.x = 0;
+    if (p.y < 0) p.y = H; if (p.y > H) p.y = 0;
+    ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI*2);
+    ctx.fillStyle = `rgba(${p.c},${p.a})`; ctx.fill();
+  });
+  // Draw connections
+  for (let i = 0; i < particles.length; i++) {
+    for (let j = i+1; j < particles.length; j++) {
+      const dx = particles[i].x - particles[j].x;
+      const dy = particles[i].y - particles[j].y;
+      const dist = Math.sqrt(dx*dx + dy*dy);
+      if (dist < 120) {
+        ctx.beginPath();
+        ctx.moveTo(particles[i].x, particles[i].y);
+        ctx.lineTo(particles[j].x, particles[j].y);
+        ctx.strokeStyle = `rgba(139,92,246,${0.08 * (1 - dist/120)})`;
+        ctx.lineWidth = 0.5; ctx.stroke();
+      }
+    }
+  }
+  requestAnimationFrame(drawParticles);
+}
+drawParticles();
+
+/* ══ 3D TILT on hero cards ══ */
+document.querySelectorAll('.hcard3d').forEach(card => {
+  card.addEventListener('mousemove', e => {
+    const r = card.getBoundingClientRect();
+    const x = (e.clientX - r.left) / r.width - 0.5;
+    const y = (e.clientY - r.top) / r.height - 0.5;
+    card.style.transform = `perspective(600px) rotateY(${x*18}deg) rotateX(${-y*10}deg) translateZ(8px)`;
+  });
+  card.addEventListener('mouseleave', () => {
+    card.style.transform = 'perspective(1000px) rotateY(-8deg) rotateX(2deg)';
+  });
+});
+
+/* 3D tilt on skill cards */
+document.querySelectorAll('.skill-card,.feat-card,.cert-card').forEach(card => {
+  card.addEventListener('mousemove', e => {
+    const r = card.getBoundingClientRect();
+    const x = (e.clientX - r.left) / r.width - 0.5;
+    const y = (e.clientY - r.top) / r.height - 0.5;
+    card.style.transform = `perspective(800px) rotateY(${x*10}deg) rotateX(${-y*6}deg) translateY(-6px)`;
+  });
+  card.addEventListener('mouseleave', () => { card.style.transform = ''; });
+});
+
+/* ══ CAROUSEL ══ */
+const CS = {};
+const allIds = ['f1','f2','f3','f4','p1','p2','p3','p4','p5','p6','p7','p8'];
+allIds.forEach(id => { CS[id] = { imgs: [], cur: 0 }; renderC(id); });
+
+function renderC(id) {
+  const s = CS[id];
+  const track = document.getElementById('track-' + id);
+  const dotsEl = document.getElementById('dots-' + id);
+  const badge  = document.getElementById('badge-' + id);
+  track.innerHTML = '';
+  if (!s.imgs.length) {
+    const sl = document.createElement('div'); sl.className = 'carousel-slide';
+    sl.innerHTML = `<div class="c-placeholder"><div class="ph-icon">📊</div><p>Hover + click + to add images</p></div>`;
+    track.appendChild(sl); dotsEl.innerHTML = ''; badge.style.display = 'none';
+  } else {
+    s.imgs.forEach((src,i) => {
+      const sl = document.createElement('div'); sl.className = 'carousel-slide';
+      sl.innerHTML = `<img src="${src}" alt="Dashboard ${i+1}" loading="lazy"/><button class="rm-btn" onclick="rmImg('${id}',${i})">✕</button>`;
+      track.appendChild(sl);
+    });
+    dotsEl.innerHTML = '';
+    s.imgs.forEach((_,i) => {
+      const d = document.createElement('div'); d.className = 'cdot'+(i===s.cur?' active':'');
+      d.onclick = () => goTo(id,i); dotsEl.appendChild(d);
+    });
+    badge.style.display = 'block';
+  }
+  applyT(id);
+}
+function applyT(id) {
+  const s = CS[id];
+  const track = document.getElementById('track-' + id);
+  const dotsEl = document.getElementById('dots-' + id);
+  const badge  = document.getElementById('badge-' + id);
+  if (s.imgs.length) {
+    track.style.transform = `translateX(-${s.cur*100}%)`;
+    Array.from(dotsEl.children).forEach((d,i) => d.className = 'cdot'+(i===s.cur?' active':''));
+    badge.textContent = `${s.cur+1}/${s.imgs.length}`;
+  }
+}
+function cMove(id,dir) { const s=CS[id]; if(!s.imgs.length)return; s.cur=(s.cur+dir+s.imgs.length)%s.imgs.length; applyT(id); }
+function goTo(id,i) { CS[id].cur=i; applyT(id); }
+function tUpload(id) { document.getElementById('input-'+id).click(); }
+function hUpload(id,inp) {
+  Array.from(inp.files).forEach(f => {
+    const r = new FileReader(); r.onload = e => { CS[id].imgs.push(e.target.result); renderC(id); }; r.readAsDataURL(f);
+  }); inp.value='';
+}
+function rmImg(id,i) { CS[id].imgs.splice(i,1); if(CS[id].cur>=CS[id].imgs.length) CS[id].cur=Math.max(0,CS[id].imgs.length-1); renderC(id); }
+
+/* touch swipe */
+allIds.forEach(id => {
+  const w = document.getElementById('wrap-'+id); if(!w) return;
+  let sx=0;
+  w.addEventListener('touchstart', e=>{sx=e.touches[0].clientX;},{passive:true});
+  w.addEventListener('touchend', e=>{ const d=sx-e.changedTouches[0].clientX; if(Math.abs(d)>40) cMove(id,d>0?1:-1);},{passive:true});
+});
+document.addEventListener('keydown',e=>{
+  if(e.key==='ArrowLeft'||e.key==='ArrowRight') {
+    const dir=e.key==='ArrowLeft'?-1:1;
+    allIds.forEach(id=>{ if(document.getElementById('wrap-'+id)?.matches(':hover')) cMove(id,dir); });
+  }
+});
+
+/* ══ TABS ══ */
+function switchTab(pid, tab, btn) {
+  const prefix = pid + '-';
+  document.querySelectorAll(`[id^="${prefix}"]`).forEach(p => p.classList.remove('active'));
+  const target = document.getElementById(prefix + tab);
+  if (target) target.classList.add('active');
+  btn.closest('.tab-nav').querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+/* ══ SCROLL REVEAL ══ */
+const revObs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('in'); });
+}, { threshold: 0.07 });
+document.querySelectorAll('.reveal').forEach(el => revObs.observe(el));
+
+/* ══ NAV ══ */
+function toggleMenu(){ document.getElementById('mobileMenu').classList.toggle('open'); }
+window.addEventListener('scroll',()=>{
+  let cur='';
+  document.querySelectorAll('section[id]').forEach(s=>{ if(window.scrollY>=s.offsetTop-80) cur=s.id; });
+  document.querySelectorAll('.nav-links a').forEach(a=>{ a.style.color=''; if(a.getAttribute('href')==='#'+cur) a.style.color='var(--p3)'; });
+},{passive:true});
+</script>
+</body>
+</html>
